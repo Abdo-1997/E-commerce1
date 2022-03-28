@@ -13,6 +13,15 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Input.firstname"></label>
+                <input asp-for="Input.firstname" class="form-control" maxlengh="10"  />
+                <span asp-validation-for="Input.firstname" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="Input.lastname"></label>
+                <input asp-for="Input.lastname" class="form-control " maxlengh="10"/>
+                <span asp-validation-for="Input.lastname" class="text-danger"></span>
+            </div> <div class="form-group">
                 <label asp-for="Input.Email"></label>
                 <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
