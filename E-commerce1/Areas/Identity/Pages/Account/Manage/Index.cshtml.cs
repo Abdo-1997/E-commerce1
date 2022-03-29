@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using E_commerce1.Models;
+using System.IO;
 
 namespace E_commerce1.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -32,21 +34,36 @@ namespace E_commerce1.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [MaxLength(10,ErrorMessage ="max lengti is 10")]
+            public string FirstName { set; get; }
+            [MaxLength(10, ErrorMessage = "max lengti is 10")]
+
+            public string lastName { set; get; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Profile picture")]
+            public byte[] profilepicture { set; get; }
+
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            //var  Firstname = await _userManager.ge;
+            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                FirstName = user.FirstName,
+                lastName=user.LastName,
+                PhoneNumber = phoneNumber,
+                profilepicture=user.Photo
             };
         }
 
@@ -77,6 +94,30 @@ namespace E_commerce1.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var firstname =user.FirstName;
+            var lastname = user.LastName;
+            if (Request.Form.Files.Count>0)
+            {
+                var file =  Request.Form.Files.FirstOrDefault();
+                //must cheack size 
+                using (var datastream = new MemoryStream())
+                {
+                    await file.CopyToAsync(datastream);
+                    user.Photo=datastream.ToArray();
+                    await _userManager.UpdateAsync(user);
+                }
+            }
+
+            if (Input.FirstName != firstname)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+            if (Input.lastName != lastname)
+            {
+                user.LastName = Input.lastName;
+                await _userManager.UpdateAsync(user);
+            }
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
