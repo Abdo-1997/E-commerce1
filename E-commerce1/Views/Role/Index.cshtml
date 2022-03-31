@@ -1,0 +1,33 @@
+﻿@model List<IdentityRole>
+@inject RoleViewModel role
+@{
+    ViewData["Title"] = "mange role";
+}
+<partial name="_roleform" model="role" view-data="ViewData" ; />
+<table class="table table-hover table-striped mt-4">
+    <thead>
+        <tr>
+            <th>RoleName</th>
+            <th>mange roles</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+             <td> @item.Name</td>  
+
+            <td class="btn-group">
+                
+                    <a asp-action="delete" asp-controller="role" asp-route-id="@item.Id" class="btn btn-danger ">delete</a>
+                    <a href="#" class="btn btn-success">details</a>
+                    <a href="#" class="btn btn-warning">edit</a>
+                
+            </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

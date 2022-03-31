@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using E_commerce1.Models;
-
+using E_commerce1.ViewModels;
 namespace E_commerce1
 {
     public class Startup
@@ -36,6 +36,8 @@ namespace E_commerce1
             services.AddIdentity<User,IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI().AddDefaultTokenProviders();
+            services.AddTransient<RoleViewModel>();
+
             services.AddControllersWithViews();
         }
 

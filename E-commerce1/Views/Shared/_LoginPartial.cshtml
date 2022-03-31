@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
-
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -9,9 +8,15 @@
         {
       <li class="nav-item">
                     <img  class="rounded-circle"src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.Photo ))" alt="profile pic" style="height:40px;width:40px;"/>
-        </li>
+            </li>
         }
-       
+        if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item text-danger">
+        <a  class="nav-link text-dark"   asp-controller="role" asp-action="index">mange roles</a>
+    </li>
+        }
+
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
     </li>
